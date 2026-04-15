@@ -150,3 +150,18 @@ Phase 4 drastically hardened the endpoint validation at the controller level bef
 *   **String Length Checks**: `description` is parsed using `if (description.length > 300)`.
 *   **Strict Geographic Math**: The `location.coordinates` pipeline was severely reinforced ensuring exactly two attributes exist, both map structurally to `'number'`, and mathematically sit within Longitude `[-180, 180]` and Latitude `[-90, 90]`. 
 *   **ObjectId Interception**: Every endpoint utilizing a URL parameter strictly routes through `mongoose.Types.ObjectId.isValid()`. This eliminates unstructured characters from dumping into database fetches, which historically triggered application-breaking `CastError` exceptions.
+
+---
+
+## 9. Frontend Auth & Foundation (Phase 5 Additions)
+
+Phase 5 successfully mapped the React/Vite layout securely onto the backend validations mimicking a high-fidelity utility.
+
+### Frontend Configurations
+*   **`Axios` Interceptors**: Injected deep into the `/api/axiosConfig.js` pipeline ensuring that `localStorage.getItem('token')` evaluates and securely embeds an `Authorization: Bearer <token>` property onto all outgoing headers dynamically to satisfy `walkthrough.md -> Section 5` constraints. 
+*   **React Context Hydration**: `AuthContext.jsx` acts as the overarching global scope manager. It maps session states back out to memory utilizing robust `try/catch` checks, maintaining persistent user environments when reloading the DOM manually. 
+
+### Protected Routing UI
+React-Router DOM components restrict user flow based rigidly on internal Context verification.
+*   **`ProtectedRoute` Component**: Auto-intercepts `<Route element={<ProtectedRoute>}>` declarations. Redirects unregistered users strictly back towards `/login`.
+*   **Functional Views**: Both `/login` and `/register` components dynamically ingest the "Tactical Observer" UI rules implementing Space Grotesk, glassmorphism boundaries, and amber linear gradients explicitly.
