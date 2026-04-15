@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../api/axiosConfig';
 import { AuthContext } from '../context/AuthContext';
-import Logo from '@/assets/potspot-logo.svg';
+import Logo from '../assets/potspot-logo.svg';
 
 const Login = () => {
   const [email, setEmail] = useState('');
