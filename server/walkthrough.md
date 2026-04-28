@@ -165,3 +165,25 @@ Phase 5 successfully mapped the React/Vite layout securely onto the backend vali
 React-Router DOM components restrict user flow based rigidly on internal Context verification.
 *   **`ProtectedRoute` Component**: Auto-intercepts `<Route element={<ProtectedRoute>}>` declarations. Redirects unregistered users strictly back towards `/login`.
 *   **Functional Views**: Both `/login` and `/register` components dynamically ingest the "Tactical Observer" UI rules implementing Space Grotesk, glassmorphism boundaries, and amber linear gradients explicitly.
+
+---
+
+## 10. Map View & Real-Time Data (Phase 6 Additions)
+
+Phase 6 instantiated the core interactive hero interface utilizing Leaflet.
+
+### Map Context (`client/src/pages/MapView.jsx`)
+*   **Geolocating Coordinates**: Upon mounting, `navigator.geolocation` silently extracts accurate positioning arrays defaulting backward towards Benoni boundaries `[-26.1853, 28.3183]` internally.
+*   **Real-Time Subscriptions**: Integrates `io.connect` specifically capturing `'new_report'` strings mapped recursively directly into the React array.
+*   **Display Filters**: Floating pills mapping natively over `.leaflet-container`. Re-routes the displayed arrays instantly without server requests natively scaling performance globally.
+
+### Spatial Rendering (`client/src/components/HazardPin.jsx`)
+*   **HTML DOM Injection (`L.divIcon`)**: Leaflet fundamentally ignores raw map image layers natively injecting CSS containers mapped accurately onto standard X, Y parameters.
+*   **Tactical Displays**: `<Popup>` overlays heavily styled internally relying on dynamic property injections to dictate warning borders (Amber for pothole, Red for accidents, Grey for minor closures).
+
+### Transmission Layers (`client/src/components/ReportForm.jsx`)
+*   **Coordinates Capture**: Maps location seamlessly straight off the parent `<MapView>` extracting precise `crosshairCentre` bindings minimizing manual string entry.
+*   **Payload Protections**: Rejects transmission attempts where description strings exceed strictly mapped 300-count array structures natively routing directly back towards `POST /api/reports` internally.
+
+### Structural Mounting (`client/src/components/ProtectedRoute.jsx`)
+*   **Encapsulated Navigation**: The `Navbar.jsx` DOM mounts explicitly *inside* the authenticated wrapper ensuring public portals `/login`, `/register` natively ignore rendering dependencies mirroring standard login immersion aesthetics. 

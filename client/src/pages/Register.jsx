@@ -27,73 +27,74 @@ const Register = () => {
       
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Uplink rejected.');
+      setError(err.response?.data?.message || 'Registration failed. Please check your inputs.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0e0e10] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-[#1f1f22] p-8 mt-12 mb-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+    <div 
+      className="min-h-screen w-full flex items-center justify-center" 
+      style={{ backgroundColor: '#1C1C1E', boxSizing: 'border-box', padding: '20px' }}
+    >
+      <div style={{ backgroundColor: '#2C2C2E', borderRadius: '16px', padding: '40px', width: '100%', maxWidth: '420px', boxSizing: 'border-box' }}>
         
-        {/* Header Section */}
-        <div className="flex flex-col items-start mb-10">
-          <img src={Logo} alt="PotSpot Observer Node" className="w-16 h-16 mb-4" />
-          <h1 className="text-3xl font-bold font-['Space_Grotesk'] text-[#fefbfe] uppercase tracking-wide">
-            PotSpot
-          </h1>
-          <h2 className="text-sm font-['Public_Sans'] text-[#e2e2e2] opacity-80 uppercase tracking-widest mt-1">
-            New Node Registration
-          </h2>
-        </div>
+        <img 
+          src={Logo} 
+          alt="PotSpot Logo" 
+          style={{ width: '180px', display: 'block', margin: '0 auto 24px' }}
+        />
 
-        {/* Error Badge */}
+        <h2 style={{ color: '#FFFFFF', fontWeight: 'bold', textAlign: 'center', marginBottom: '24px', fontSize: '24px', fontFamily: 'sans-serif' }}>
+          Create your account
+        </h2>
+
         {error && (
-          <div className="bg-[#d53d18]/10 text-[#d53d18] font-['Space_Grotesk'] uppercase text-sm font-bold border-l-4 border-[#d53d18] p-3 mb-6">
+          <div style={{ backgroundColor: 'rgba(213, 61, 24, 0.1)', color: '#d53d18', borderLeft: '4px solid #d53d18', padding: '12px', marginBottom: '24px', fontSize: '14px', fontWeight: 'bold', fontFamily: 'sans-serif' }}>
             ERROR: {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2">
-            <label className="font-['Space_Grotesk'] text-xs font-bold text-[#e2e2e2] uppercase tracking-[0.05em]">
-              Agent ID (Username)
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div>
+            <label style={{ color: '#888888', display: 'block', marginBottom: '8px', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', fontFamily: 'sans-serif' }}>
+              Username
             </label>
             <input 
               type="text" 
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="bg-[#252528] text-[#fefbfe] font-['Public_Sans'] px-4 py-3 outline-none border-b-2 border-transparent focus:border-[#f8a826] focus:bg-[#131315] transition-colors rounded-sm"
-              placeholder="ObserverAlpha"
+              style={{ backgroundColor: '#3A3A3C', border: '1px solid #48484A', color: '#FFFFFF', borderRadius: '8px', padding: '12px', width: '100%', boxSizing: 'border-box', outline: 'none', fontFamily: 'sans-serif' }}
+              placeholder="e.g. JohnDoe"
             />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="font-['Space_Grotesk'] text-xs font-bold text-[#e2e2e2] uppercase tracking-[0.05em]">
-              Agent Email
+          <div>
+            <label style={{ color: '#888888', display: 'block', marginBottom: '8px', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', fontFamily: 'sans-serif' }}>
+              Email Address
             </label>
             <input 
               type="email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="bg-[#252528] text-[#fefbfe] font-['Public_Sans'] px-4 py-3 outline-none border-b-2 border-transparent focus:border-[#f8a826] focus:bg-[#131315] transition-colors rounded-sm"
+              style={{ backgroundColor: '#3A3A3C', border: '1px solid #48484A', color: '#FFFFFF', borderRadius: '8px', padding: '12px', width: '100%', boxSizing: 'border-box', outline: 'none', fontFamily: 'sans-serif' }}
               placeholder="operator@potspot.network"
             />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="font-['Space_Grotesk'] text-xs font-bold text-[#e2e2e2] uppercase tracking-[0.05em]">
-              Passkey
+          <div>
+            <label style={{ color: '#888888', display: 'block', marginBottom: '8px', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', fontFamily: 'sans-serif' }}>
+              Password
             </label>
             <input 
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="bg-[#252528] text-[#fefbfe] font-['Public_Sans'] px-4 py-3 outline-none border-b-2 border-transparent focus:border-[#f8a826] focus:bg-[#131315] transition-colors rounded-sm"
+              style={{ backgroundColor: '#3A3A3C', border: '1px solid #48484A', color: '#FFFFFF', borderRadius: '8px', padding: '12px', width: '100%', boxSizing: 'border-box', outline: 'none', fontFamily: 'sans-serif' }}
               placeholder="••••••••"
             />
           </div>
@@ -101,15 +102,14 @@ const Register = () => {
           <button 
             type="submit" 
             disabled={isLoading}
-            className="mt-4 font-['Space_Grotesk'] uppercase font-bold text-[#0e0e10] py-4 rounded-sm transition-transform active:scale-[0.98] shadow-inner disabled:opacity-50"
-            style={{ backgroundImage: 'linear-gradient(135deg, #f8a826 0%, #df9305 100%)' }}
+            style={{ backgroundColor: '#F5A623', color: '#000000', fontWeight: '700', borderRadius: '8px', padding: '12px', width: '100%', cursor: 'pointer', border: 'none', marginTop: '8px', opacity: isLoading ? 0.7 : 1, fontFamily: 'sans-serif', textTransform: 'uppercase', fontSize: '14px' }}
           >
-            {isLoading ? 'Registering...' : 'Initialize Node'}
+            {isLoading ? 'Registering...' : 'Register'}
           </button>
         </form>
 
-        <div className="mt-8 text-center font-['Public_Sans'] text-sm text-[#e2e2e2] opacity-70">
-          Already active? <Link to="/login" className="text-[#f8a826] font-bold hover:underline">Engage Link</Link>
+        <div style={{ textAlign: 'center', marginTop: '24px', color: '#e2e2e2', fontFamily: 'sans-serif', fontSize: '14px' }}>
+          Already have an account? <Link to="/login" style={{ color: '#F5A623', fontWeight: 'bold', textDecoration: 'none', marginLeft: '4px' }}>Sign In</Link>
         </div>
       </div>
     </div>

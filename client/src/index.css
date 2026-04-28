@@ -71,12 +71,18 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
+
   * {
     @apply border-border outline-ring/50;
+    box-sizing: border-box;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: #1C1C1E;
+    margin: 0;
   }
+
   html {
     @apply font-sans;
   }
@@ -86,6 +92,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
