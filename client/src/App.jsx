@@ -7,10 +7,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 
 import MapView from './pages/MapView';
-
-// Placeholders
-const ReportDetail = () => <div className="text-[#fefbfe] text-center mt-20 font-['Space_Grotesk'] text-2xl uppercase">Report Analysis Active.</div>;
-const MyReports = () => <div className="text-[#fefbfe] text-center mt-20 font-['Space_Grotesk'] text-2xl uppercase">Personal Operations Log.</div>;
+import MyReports from './pages/MyReports';
+import ReportDetail from './pages/ReportDetail';
 
 function App() {
   return (

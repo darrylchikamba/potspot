@@ -7,17 +7,17 @@ const ProtectedRoute = ({ children }) => {
   const { token, loading } = useContext(AuthContext);
 
   if (loading) {
-    return <div className="min-h-screen bg-[#0e0e10] flex items-center justify-center text-[#f8a826] font-mono">LOADING.SYS...</div>;
-  }
-
-  if (!token) {
-    return <Navigate to="/login" replace />;
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: '#0e0e10', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f8a826', fontFamily: 'monospace' }}>
+        Loading...
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[#0e0e10]">
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#0e0e10' }}>
       <Navbar />
-      <div className="flex-1 overflow-auto relative">
+      <div style={{ flex: 1, overflowY: 'auto', position: 'relative' }}>
         {children}
       </div>
     </div>

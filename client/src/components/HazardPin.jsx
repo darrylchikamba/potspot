@@ -53,36 +53,114 @@ const HazardPin = ({ report }) => {
 
   const customIcon = createCustomIcon(colour);
 
+  const popupContainerStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: '#1f1f22',
+    padding: '12px',
+    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+    borderLeft: `4px solid ${colour}`,
+    minWidth: '180px',
+    boxSizing: 'border-box'
+  };
+
+  const popupHeaderStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '8px',
+    paddingBottom: '8px',
+    borderBottom: '1px solid #252528'
+  };
+
+  const labelStyle = {
+    fontFamily: '"Space Grotesk", sans-serif',
+    color: '#fefbfe',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+    fontSize: '14px',
+    margin: 0
+  };
+
+  const getSeverityStyle = (sev) => {
+    let bg = '#e2e2e2';
+    let col = '#0e0e10';
+    if (sev === 'high') { bg = '#d53d18'; col = '#fefbfe'; }
+    else if (sev === 'medium') { bg = '#df9305'; col = '#0e0e10'; }
+    
+    return {
+      fontSize: '10px',
+      textTransform: 'uppercase',
+      fontWeight: 'bold',
+      padding: '2px 8px',
+      borderRadius: '2px',
+      backgroundColor: bg,
+      color: col
+    };
+  };
+
+  const addressStyle = {
+    fontFamily: '"Public Sans", sans-serif',
+    fontSize: '12px',
+    color: '#e2e2e2',
+    opacity: 0.9,
+    marginBottom: '12px',
+    lineHeight: 1.25
+  };
+
+  const footerStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    marginTop: 'auto',
+    paddingTop: '8px'
+  };
+
+  const timeStyle = {
+    fontFamily: '"Space Grotesk", sans-serif',
+    fontSize: '10px',
+    textTransform: 'uppercase',
+    color: '#e2e2e2',
+    opacity: 0.6
+  };
+
+  const upvoteStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    fontFamily: '"Space Grotesk", sans-serif',
+    color: '#f8a826',
+    fontWeight: 'bold',
+    fontSize: '12px'
+  };
+
   return (
     <Marker position={[lat, lng]} icon={customIcon}>
       <Popup className="tactical-popup">
-        <div className="flex flex-col bg-[#1f1f22] p-3 shadow-lg border-l-4" style={{ borderColor: colour, minWidth: '180px' }}>
-          <div className="flex justify-between items-center mb-2 pb-2 border-b border-[#252528]">
-            <span className="font-['Space_Grotesk'] text-[#fefbfe] font-bold uppercase tracking-wider text-sm">
+        <div style={popupContainerStyle}>
+          <div style={popupHeaderStyle}>
+            <span style={labelStyle}>
               {label}
             </span>
-            <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-sm ${
-              severity === 'high' ? 'bg-[#d53d18] text-[#fefbfe]' : 
-              severity === 'medium' ? 'bg-[#df9305] text-[#0e0e10]' : 
-              'bg-[#e2e2e2] text-[#0e0e10]'
-            }`}>
+            <span style={getSeverityStyle(severity)}>
               {severity}
             </span>
           </div>
 
-          <div className="font-['Public_Sans'] text-xs text-[#e2e2e2] opacity-90 mb-3 leading-tight">
+          <div style={addressStyle}>
             {address || 'Coordinates Only'}
           </div>
 
-          <div className="flex justify-between items-end mt-auto pt-2">
-            <div className="font-['Space_Grotesk'] text-[10px] uppercase text-[#e2e2e2] opacity-60">
+          <div style={footerStyle}>
+            <div style={timeStyle}>
               {timeSince}
             </div>
-            <div className="flex items-center gap-1 font-['Space_Grotesk'] text-[#f8a826] font-bold text-xs">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+            <div style={upvoteStyle}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd" transform="rotate(180 10 10)" />
               </svg>
-              {upvotes.length}
+              {(upvotes || []).length}
             </div>
           </div>
         </div>

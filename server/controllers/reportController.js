@@ -7,7 +7,7 @@ import { io } from '../index.js';
 // @access  Private
 export const getReports = async (req, res) => {
   try {
-    const reports = await Report.find({ status: 'active' }).populate('user', 'username email');
+    const reports = await Report.find({}).populate('user', 'username email');
     res.json(reports);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -95,10 +95,10 @@ export const createReport = async (req, res) => {
     });
 
     const createdReport = await report.save();
-    
+
     // Emit real-time event
     io.emit('new_report', createdReport);
-    
+
     res.status(201).json(createdReport);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -132,10 +132,10 @@ export const toggleUpvote = async (req, res) => {
     }
 
     const updatedReport = await report.save();
-    
+
     // Emit real-time upvote event
     io.emit('upvote_updated', { reportId: req.params.id, upvotes: report.upvotes });
-    
+
     res.json(updatedReport);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -164,7 +164,7 @@ export const resolveReport = async (req, res) => {
 
     report.status = 'resolved';
     const updatedReport = await report.save();
-    
+
     res.json(updatedReport);
   } catch (error) {
     res.status(500).json({ message: error.message });

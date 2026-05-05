@@ -102,8 +102,8 @@ const MapView = () => {
 
   const safeReports = reports || [];
   const filteredReports = filter === 'all'
-    ? safeReports
-    : safeReports.filter(r => r.category === filter);
+    ? safeReports.filter(r => r.status === 'active')
+    : safeReports.filter(r => r.category === filter && r.status === 'active');
 
   return (
     <div style={{ height: 'calc(100vh - 56px)', width: '100%', marginTop: '56px', position: 'relative', backgroundColor: '#0e0e10' }}>
@@ -130,9 +130,9 @@ const MapView = () => {
       </div>
 
       {/* Target Crosshair */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[500] pointer-events-none opacity-50 flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-[#f8a826] flex items-center justify-center rounded-full">
-          <div className="w-1 h-1 bg-[#f8a826] rounded-full" />
+      <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 500, pointerEvents: 'none' }}>
+        <div style={{ width: '40px', height: '40px', border: '2px solid #F5A623', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '8px', height: '8px', backgroundColor: '#F5A623', borderRadius: '50%' }} />
         </div>
       </div>
 

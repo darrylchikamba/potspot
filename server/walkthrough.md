@@ -187,3 +187,18 @@ Phase 6 instantiated the core interactive hero interface utilizing Leaflet.
 
 ### Structural Mounting (`client/src/components/ProtectedRoute.jsx`)
 *   **Encapsulated Navigation**: The `Navbar.jsx` DOM mounts explicitly *inside* the authenticated wrapper ensuring public portals `/login`, `/register` natively ignore rendering dependencies mirroring standard login immersion aesthetics. 
+
+---
+
+## 11. Custom Reports & Detail Views (Phase 7 Additions)
+
+Phase 7 finalised the report viewing logic through two primary structural routes, eliminating Tailwind classes completely in favour of brutalist inline style mappings.
+
+### Personal Operations Log (`client/src/pages/MyReports.jsx`)
+*   **Secure Client-Side Mapping**: Implements rigorous string validation (`report.user?.toString() === user?._id?.toString()`) to filter global `GET /api/reports` fetches down to only hazards owned by the active socket operator.
+*   **Interactive List**: Maps custom cards showcasing dynamic status flags, time metrics, and exact coordinate/address hashes.
+*   **Owner Toggles**: Injects actionable `PUT /api/reports/:id/resolve` and `DELETE /api/reports/:id` request buttons strictly for authenticated owners, providing a clean feedback loop for clearing the map organically.
+
+### Single Node Detail (`client/src/pages/ReportDetail.jsx`)
+*   **Comprehensive Data Rendering**: Intercepts the parameterized `:id` URL string via `useParams()` and mounts a clean metadata table mapping out exact operator usernames, upvote counts, and raw descriptions without clipping.
+*   **Active Verification (Upvoting)**: Hooks into `PUT /api/reports/:id/upvote` displaying an active toggle. Internally maps `hasUpvoted` logic against the active operator `_id` array to conditionally fill the Amber SVG vector natively.
