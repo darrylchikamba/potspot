@@ -128,18 +128,21 @@ const buttonBaseStyle = {
   boxSizing: 'border-box'
 };
 
-const resolveButtonStyle = {
+const getResolveButtonStyle = (isHovered) => ({
   ...buttonBaseStyle,
   backgroundColor: '#f8a826',
-  color: '#000000'
-};
+  color: '#000000',
+  boxShadow: isHovered ? '0 4px 15px rgba(248, 168, 38, 0.4)' : 'none',
+  transform: isHovered ? 'translateY(-1px)' : 'none'
+});
 
-const deleteButtonStyle = {
+const getDeleteButtonStyle = (isHovered) => ({
   ...buttonBaseStyle,
-  backgroundColor: 'rgba(213,61,24,0.1)',
+  backgroundColor: isHovered ? 'rgba(213, 61, 24, 0.2)' : 'rgba(213,61,24,0.1)',
   color: '#d53d18',
-  border: '1px solid #d53d18'
-};
+  border: '1px solid #d53d18',
+  transform: isHovered ? 'translateY(-1px)' : 'none'
+});
 
 const linkButtonStyle = {
   ...buttonBaseStyle,
@@ -162,6 +165,8 @@ const MyReports = () => {
   const { user } = useContext(AuthContext);
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hoveredDelete, setHoveredDelete] = useState(null);
+  const [hoveredResolve, setHoveredResolve] = useState(null);
 
   const fetchReports = useCallback(async () => {
     try {
@@ -261,14 +266,18 @@ const MyReports = () => {
                 <div style={actionRowStyle}>
                   <button
                     onClick={() => handleDelete(report._id)}
-                    style={deleteButtonStyle}
+                    style={getDeleteButtonStyle(hoveredDelete === report._id)}
+                    onMouseEnter={() => setHoveredDelete(report._id)}
+                    onMouseLeave={() => setHoveredDelete(null)}
                   >
                     Delete Report
                   </button>
                   {!isResolved && (
                     <button
                       onClick={() => handleResolve(report._id)}
-                      style={resolveButtonStyle}
+                      style={getResolveButtonStyle(hoveredResolve === report._id)}
+                      onMouseEnter={() => setHoveredResolve(report._id)}
+                      onMouseLeave={() => setHoveredResolve(null)}
                     >
                       Resolve Hazard
                     </button>

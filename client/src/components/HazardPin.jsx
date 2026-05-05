@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { formatDistanceToNow } from 'date-fns';
@@ -20,19 +20,35 @@ const getCategoryDetails = (category) => {
 
 const createCustomIcon = (colour) => {
   const html = `
-    <div style="
-      background-color: ${colour};
-      width: 20px;
-      height: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border: 3px solid #0e0e10;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-      position: relative;
-      transform: rotate(45deg);
-    ">
-      <div style="background-color: #0e0e10; width: 6px; height: 6px;"></div>
+    <div style="position: relative; width: 20px; height: 20px;">
+      <div class="potspot-pulse" style="
+        background-color: ${colour};
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0.4;
+        transform: rotate(45deg);
+      "></div>
+      <div style="
+        background-color: ${colour};
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 3px solid #0e0e10;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: rotate(45deg);
+        z-index: 10;
+        box-sizing: border-box;
+      ">
+        <div style="background-color: #0e0e10; width: 6px; height: 6px;"></div>
+      </div>
     </div>
   `;
   
@@ -52,6 +68,25 @@ const HazardPin = ({ report }) => {
   const timeSince = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
 
   const customIcon = createCustomIcon(colour);
+
+  useEffect(() => {
+    if (!document.getElementById('potspot-map-styles')) {
+      const style = document.createElement('style');
+      style.id = 'potspot-map-styles';
+      style.innerHTML = `
+        @keyframes potspot-ping {
+          0% { transform: scale(1) rotate(45deg); opacity: 0.8; }
+          70% { transform: scale(2.5) rotate(45deg); opacity: 0; }
+          100% { transform: scale(2.5) rotate(45deg); opacity: 0; }
+        }
+        .potspot-pulse { animation: potspot-ping 2s ease-out infinite; }
+        .leaflet-popup-content-wrapper { border: none !important; box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important; background: transparent !important; padding: 0 !important; }
+        .leaflet-popup-content { margin: 0 !important; }
+        .leaflet-popup-tip { display: none !important; }
+      `;
+      document.head.appendChild(style);
+    }
+  }, []);
 
   const popupContainerStyle = {
     display: 'flex',

@@ -35,6 +35,7 @@ const MapView = () => {
   const [reports, setReports] = useState([]);
   const [filter, setFilter] = useState('all');
   const [isReporting, setIsReporting] = useState(false);
+  const [hoveredFilter, setHoveredFilter] = useState(null);
 
   const [mapCentre, setMapCentre] = useState([-26.1853, 28.3183]); // Default Benoni
   const [crosshairCentre, setCrosshairCentre] = useState({ lat: -26.1853, lng: 28.3183 });
@@ -98,6 +99,13 @@ const MapView = () => {
     };
   }, []);
 
+  // BottomNav Event Listener
+  useEffect(() => {
+    const handleOpenReport = () => setIsReporting(true);
+    window.addEventListener('openReportForm', handleOpenReport);
+    return () => window.removeEventListener('openReportForm', handleOpenReport);
+  }, []);
+
   const categories = ['all', 'pothole', 'flooding', 'accident', 'road_closure', 'other'];
 
   const safeReports = reports || [];
@@ -130,10 +138,9 @@ const MapView = () => {
       </div>
 
       {/* Target Crosshair */}
-      <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 500, pointerEvents: 'none' }}>
-        <div style={{ width: '40px', height: '40px', border: '2px solid #F5A623', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: '8px', height: '8px', backgroundColor: '#F5A623', borderRadius: '50%' }} />
-        </div>
+      <div style={{ position: 'fixed', top: 'calc(50% - 28px)', left: '50%', transform: 'translateX(-50%)', zIndex: 500, pointerEvents: 'none' }}>
+        <div style={{ width: '24px', height: '24px', borderRadius: '50% 50% 50% 0', transform: 'rotate(-45deg)', backgroundColor: '#f8a826', border: '3px solid #df9305', boxShadow: '0 0 0 4px rgba(248, 168, 38, 0.2)' }} />
+        <div style={{ width: '2px', height: '12px', backgroundColor: '#f8a826', margin: '0 auto', marginTop: '2px' }} />
       </div>
 
       {/* Filter Overlay */}
@@ -142,6 +149,8 @@ const MapView = () => {
           <button
             key={cat}
             onClick={() => setFilter(cat)}
+            onMouseEnter={() => setHoveredFilter(cat)}
+            onMouseLeave={() => setHoveredFilter(null)}
             style={{
               fontFamily: '"Space Grotesk", sans-serif',
               fontWeight: 'bold',
@@ -150,11 +159,12 @@ const MapView = () => {
               padding: '8px 16px',
               cursor: 'pointer',
               border: filter === cat ? '2px solid #f8a826' : '2px solid transparent',
-              backgroundColor: filter === cat ? '#f8a826' : 'rgba(31, 31, 34, 0.9)',
-              color: filter === cat ? '#0e0e10' : '#e2e2e2',
+              backgroundColor: filter === cat ? (hoveredFilter === cat ? '#df9305' : '#f8a826') : (hoveredFilter === cat ? '#252528' : 'rgba(31, 31, 34, 0.9)'),
+              color: filter === cat ? '#0e0e10' : (hoveredFilter === cat ? '#fefbfe' : '#e2e2e2'),
               boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
               borderRadius: '2px',
-              backdropFilter: filter === cat ? 'none' : 'blur(4px)'
+              backdropFilter: filter === cat ? 'none' : 'blur(4px)',
+              transition: 'all 0.2s ease'
             }}
           >
             {cat.replace('_', ' ')}
@@ -168,37 +178,6 @@ const MapView = () => {
           Acquiring Satellite Uplink...
         </div>
       )}
-
-      {/* Report FAB */}
-      <div
-        style={{ position: 'fixed', bottom: '32px', right: '32px', zIndex: 2000 }}
-        onClickCapture={() => {
-          setIsReporting(true);
-          console.log('FAB capture fired, isReporting set to true');
-        }}
-      >
-        <button
-          style={{
-            backgroundColor: '#F5A623',
-            color: '#000',
-            fontWeight: '700',
-            borderRadius: '50%',
-            width: '60px',
-            height: '60px',
-            fontSize: '28px',
-            cursor: 'pointer',
-            border: 'none',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            boxShadow: '0 4px 15px rgba(245, 166, 35, 0.4)'
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '32px', width: '32px', pointerEvents: 'none' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-          </svg>
-        </button>
-      </div>
 
       {/* Reporting Panel Wrapper */}
       {isReporting && (

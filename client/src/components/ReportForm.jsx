@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosInstance from '../api/axiosConfig';
 
 const wrapperStyle = {
@@ -28,27 +28,34 @@ const headerStyle = {
 
 const titleStyle = {
   color: '#FFFFFF',
+  fontFamily: '"Space Grotesk", sans-serif',
+  fontSize: '24px',
   fontWeight: '700',
-  fontSize: '18px',
-  letterSpacing: '2px',
-  margin: 0
+  textTransform: 'uppercase',
+  letterSpacing: '3px',
+  margin: 0,
+  borderLeft: '3px solid #f8a826',
+  paddingLeft: '16px'
 };
 
 const subtitleStyle = {
+  fontFamily: '"Space Grotesk", sans-serif',
+  fontSize: '11px',
+  letterSpacing: '1px',
   color: '#888888',
-  fontSize: '12px',
   marginTop: '4px'
 };
 
-const closeButtonStyle = {
+const getCloseButtonStyle = (isHovering) => ({
   background: 'none',
   border: 'none',
-  color: '#888888',
+  color: isHovering ? '#f8a826' : '#888888',
   cursor: 'pointer',
   fontSize: '24px',
   padding: 0,
-  lineHeight: 1
-};
+  lineHeight: 1,
+  transition: 'color 0.2s ease'
+});
 
 const formBodyStyle = {
   padding: '24px',
@@ -58,11 +65,12 @@ const formBodyStyle = {
 };
 
 const labelStyle = {
-  color: '#888888',
-  fontSize: '12px',
+  fontFamily: '"Space Grotesk", sans-serif',
+  fontSize: '11px',
   fontWeight: '700',
   textTransform: 'uppercase',
-  letterSpacing: '1px',
+  letterSpacing: '2px',
+  color: '#888888',
   display: 'block',
   marginBottom: '8px'
 };
@@ -74,44 +82,66 @@ const inputStyle = {
   borderRadius: '8px',
   padding: '12px',
   width: '100%',
-  fontSize: '14px',
-  boxSizing: 'border-box',
-  fontFamily: 'inherit'
+  fontFamily: '"Public Sans", sans-serif',
+  fontSize: '15px',
+  boxSizing: 'border-box'
 };
+
+const getCategoryInputStyle = (isFocused, isHovered) => ({
+  ...inputStyle,
+  backgroundColor: '#252528',
+  border: 'none',
+  borderBottom: isFocused || isHovered ? '2px solid #f8a826' : '2px solid transparent',
+  borderBottomLeftRadius: isFocused || isHovered ? '0' : '8px',
+  borderBottomRightRadius: isFocused || isHovered ? '0' : '8px',
+  outline: 'none',
+  WebkitAppearance: 'none',
+  accentColor: '#f8a826',
+  transition: 'all 0.2s ease'
+});
 
 const severityContainerStyle = {
   display: 'flex',
   gap: '8px'
 };
 
-const getSeverityButtonStyle = (isActive) => ({
+const getSeverityButtonStyle = (isActive, isHovered) => ({
   padding: '8px',
+  fontFamily: '"Space Grotesk", sans-serif',
   fontWeight: '700',
-  fontSize: '12px',
+  fontSize: '13px',
+  letterSpacing: '1px',
   textTransform: 'uppercase',
   border: isActive ? '2px solid #F5A623' : '2px solid transparent',
   borderRadius: '6px',
   cursor: 'pointer',
-  backgroundColor: isActive ? '#2C2C2E' : '#131315',
+  backgroundColor: isActive ? '#2C2C2E' : isHovered ? '#252528' : '#131315',
   color: isActive ? '#FFFFFF' : '#888888',
   flex: 1,
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+  transition: 'background-color 0.2s ease'
 });
 
-const submitButtonStyle = {
-  backgroundColor: '#F5A623',
+const getSubmitButtonStyle = (isHovering, isDisabled) => ({
+  background: 'linear-gradient(135deg, #f8a826 0%, #df9305 100%)',
   color: '#000000',
+  fontFamily: '"Space Grotesk", sans-serif',
+  fontSize: '13px',
   fontWeight: '700',
+  letterSpacing: '3px',
+  textTransform: 'uppercase',
   padding: '16px',
   width: '100%',
   border: 'none',
   borderRadius: '8px',
-  cursor: 'pointer',
-  fontSize: '14px',
-  letterSpacing: '1px',
+  cursor: isDisabled ? 'not-allowed' : 'pointer',
   marginTop: '24px',
-  boxSizing: 'border-box'
-};
+  boxSizing: 'border-box',
+  boxShadow: isHovering && !isDisabled ? '0 6px 30px rgba(248, 168, 38, 0.55)' : '0 4px 20px rgba(248, 168, 38, 0.35)',
+  transform: isHovering && !isDisabled ? 'translateY(-1px)' : 'none',
+  transition: 'all 0.2s ease',
+  opacity: isDisabled ? 0.5 : 1
+});
 
 const errorBoxStyle = {
   backgroundColor: 'rgba(213,61,24,0.1)',
@@ -133,6 +163,38 @@ const ReportForm = ({ location, onClose }) => {
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+
+  // Micro-interaction states
+  const [isHoveringSubmit, setIsHoveringSubmit] = useState(false);
+  const [hoveredSeverity, setHoveredSeverity] = useState(null);
+  const [isHoveringClose, setIsHoveringClose] = useState(false);
+  const [isCategoryFocused, setIsCategoryFocused] = useState(false);
+  const [isCategoryHovered, setIsCategoryHovered] = useState(false);
+  const [locationLabel, setLocationLabel] = useState('');
+
+  useEffect(() => {
+    if (!location) return;
+    const fetchAddress = async () => {
+      try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lng}`, {
+          headers: {
+            'User-Agent': 'PotSpot/1.0'
+          }
+        });
+        const data = await response.json();
+        if (data && data.display_name) {
+          const parts = data.display_name.split(',').slice(0, 3).join(',');
+          setLocationLabel(parts.trim());
+        } else {
+          setLocationLabel('');
+        }
+      } catch (err) {
+        console.error('Reverse geocode failed', err);
+        setLocationLabel('');
+      }
+    };
+    fetchAddress();
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -164,10 +226,15 @@ const ReportForm = ({ location, onClose }) => {
         <div>
           <h2 style={titleStyle}>Log Hazard</h2>
           <div style={subtitleStyle}>
-            Lat: {location.lat.toFixed(4)} | Lng: {location.lng.toFixed(4)}
+            {locationLabel || `Lat: ${location.lat.toFixed(4)} | Lng: ${location.lng.toFixed(4)}`}
           </div>
         </div>
-        <button onClick={onClose} style={closeButtonStyle}>
+        <button
+          onClick={onClose}
+          style={getCloseButtonStyle(isHoveringClose)}
+          onMouseEnter={() => setIsHoveringClose(true)}
+          onMouseLeave={() => setIsHoveringClose(false)}
+        >
           &times;
         </button>
       </div>
@@ -185,7 +252,11 @@ const ReportForm = ({ location, onClose }) => {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              style={inputStyle}
+              onFocus={() => setIsCategoryFocused(true)}
+              onBlur={() => setIsCategoryFocused(false)}
+              onMouseEnter={() => setIsCategoryHovered(true)}
+              onMouseLeave={() => setIsCategoryHovered(false)}
+              style={getCategoryInputStyle(isCategoryFocused, isCategoryHovered)}
             >
               <option value="pothole">Pothole</option>
               <option value="flooding">Flooding</option>
@@ -203,7 +274,9 @@ const ReportForm = ({ location, onClose }) => {
                   key={sev}
                   type="button"
                   onClick={() => setSeverity(sev)}
-                  style={getSeverityButtonStyle(severity === sev)}
+                  onMouseEnter={() => setHoveredSeverity(sev)}
+                  onMouseLeave={() => setHoveredSeverity(null)}
+                  style={getSeverityButtonStyle(severity === sev, hoveredSeverity === sev)}
                 >
                   {sev}
                 </button>
@@ -233,11 +306,9 @@ const ReportForm = ({ location, onClose }) => {
           <button
             type="submit"
             disabled={isSubmitting || description.length > 300}
-            style={{
-              ...submitButtonStyle,
-              opacity: (isSubmitting || description.length > 300) ? 0.5 : 1,
-              cursor: (isSubmitting || description.length > 300) ? 'not-allowed' : 'pointer'
-            }}
+            onMouseEnter={() => setIsHoveringSubmit(true)}
+            onMouseLeave={() => setIsHoveringSubmit(false)}
+            style={getSubmitButtonStyle(isHoveringSubmit, isSubmitting || description.length > 300)}
           >
             {isSubmitting ? 'Submitting...' : 'Submit Report'}
           </button>
