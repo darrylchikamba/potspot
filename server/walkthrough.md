@@ -202,3 +202,18 @@ Phase 7 finalised the report viewing logic through two primary structural routes
 ### Single Node Detail (`client/src/pages/ReportDetail.jsx`)
 *   **Comprehensive Data Rendering**: Intercepts the parameterized `:id` URL string via `useParams()` and mounts a clean metadata table mapping out exact operator usernames, upvote counts, and raw descriptions without clipping.
 *   **Active Verification (Upvoting)**: Hooks into `PUT /api/reports/:id/upvote` displaying an active toggle. Internally maps `hasUpvoted` logic against the active operator `_id` array to conditionally fill the Amber SVG vector natively.
+
+---
+
+## 12. Reverse Geocoding Integration (Phase 8 Additions)
+
+Phase 8 automated the extraction of human-readable street addresses directly from geographic coordinates without manual user input.
+
+### OpenStreetMap Nominatim (`server/utils/geocode.js`)
+*   **Native Fetch Mapping**: Employs the built-in Node 18+ `fetch` API querying `nominatim.openstreetmap.org` directly, avoiding heavy third-party packages.
+*   **Address Trimming**: Intercepts the raw JSON `display_name` property and trims it strictly down to the first three comma-separated elements (e.g. "Hans Schoeman Street, Boksburg") to maintain UI minimalism.
+*   **Fault Tolerance**: Wrapped securely in `try/catch` logic. If rate-limits or offline conditions trigger a failure, it silently returns `null` ensuring the overarching report submission process never crashes.
+
+### Backend Injection (`server/controllers/reportController.js`)
+*   **Automated Population**: Inside the `createReport` controller, the logic intercepts the `latitude` and `longitude` variables immediately after standard geographical boundary checks. 
+*   **Address Mutation**: Replaces empty address arrays dynamically with the generated Nominatim strings right before locking the final schema block into MongoDB.

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Report from '../models/Report.js';
 import { io } from '../index.js';
+import { reverseGeocode } from '../utils/geocode.js';
 
 // @desc    Fetch all active reports
 // @route   GET /api/reports
@@ -84,12 +85,14 @@ export const createReport = async (req, res) => {
       return res.status(400).json({ message: 'Latitude must be between -90 and 90' });
     }
 
+    const generatedAddress = await reverseGeocode(latitude, longitude);
+
     const report = new Report({
       location,
       category,
       severity: severity || 'medium',
       description,
-      address,
+      address: generatedAddress || address || undefined,
       user: req.user._id,
       expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000), // 48 hours from now
     });
