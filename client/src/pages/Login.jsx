@@ -9,6 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isHoveringSubmit, setIsHoveringSubmit] = useState(false);
   
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
@@ -35,14 +36,24 @@ const Login = () => {
   return (
     <div 
       className="min-h-screen w-full flex items-center justify-center" 
-      style={{ backgroundColor: '#1C1C1E', boxSizing: 'border-box', padding: '20px' }}
+      style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        minHeight: '100vh', 
+        width: '100%', 
+        backgroundColor: '#0e0e10', 
+        backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(248, 168, 38, 0.03) 40px, rgba(248, 168, 38, 0.03) 80px)',
+        boxSizing: 'border-box', 
+        padding: '20px' 
+      }}
     >
-      <div style={{ backgroundColor: '#2C2C2E', borderRadius: '16px', padding: '40px', width: '100%', maxWidth: '420px', boxSizing: 'border-box' }}>
-        
+      <div style={{ backgroundColor: '#0e0e10', borderRadius: '0px', padding: '40px', width: '100%', maxWidth: '420px', boxSizing: 'border-box', borderLeft: '3px solid #f8a826', position: 'relative', overflow: 'hidden' }}>
+
         <img 
           src={Logo} 
           alt="PotSpot Logo" 
-          style={{ width: '180px', display: 'block', margin: '0 auto 24px' }}
+          style={{ width: '180px', display: 'block', margin: '0 auto 24px', position: 'relative', zIndex: 1 }}
         />
 
         <h2 style={{ color: '#FFFFFF', fontWeight: 'bold', textAlign: 'center', marginBottom: '24px', fontSize: '24px', fontFamily: 'sans-serif' }}>
@@ -65,7 +76,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{ backgroundColor: '#3A3A3C', border: '1px solid #48484A', color: '#FFFFFF', borderRadius: '8px', padding: '12px', width: '100%', boxSizing: 'border-box', outline: 'none', fontFamily: 'sans-serif' }}
+              style={{ backgroundColor: '#3A3A3C', border: '1px solid #48484A', color: '#FFFFFF', borderRadius: '0px', padding: '12px', width: '100%', boxSizing: 'border-box', outline: 'none', fontFamily: 'sans-serif' }}
               placeholder="operator@potspot.network"
             />
           </div>
@@ -79,7 +90,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              style={{ backgroundColor: '#3A3A3C', border: '1px solid #48484A', color: '#FFFFFF', borderRadius: '8px', padding: '12px', width: '100%', boxSizing: 'border-box', outline: 'none', fontFamily: 'sans-serif' }}
+              style={{ backgroundColor: '#3A3A3C', border: '1px solid #48484A', color: '#FFFFFF', borderRadius: '0px', padding: '12px', width: '100%', boxSizing: 'border-box', outline: 'none', fontFamily: 'sans-serif' }}
               placeholder="••••••••"
             />
           </div>
@@ -87,7 +98,26 @@ const Login = () => {
           <button 
             type="submit" 
             disabled={isLoading}
-            style={{ backgroundColor: '#F5A623', color: '#000000', fontWeight: '700', borderRadius: '8px', padding: '12px', width: '100%', cursor: 'pointer', border: 'none', marginTop: '8px', opacity: isLoading ? 0.7 : 1, fontFamily: 'sans-serif', textTransform: 'uppercase', fontSize: '14px' }}
+            onMouseEnter={() => setIsHoveringSubmit(true)}
+            onMouseLeave={() => setIsHoveringSubmit(false)}
+            style={{ 
+              backgroundColor: '#F5A623', 
+              color: '#000000', 
+              fontWeight: '700', 
+              borderRadius: '0px', 
+              padding: '12px', 
+              width: '100%', 
+              cursor: 'pointer', 
+              border: 'none', 
+              marginTop: '8px', 
+              opacity: isLoading ? 0.7 : 1, 
+              fontFamily: 'sans-serif', 
+              textTransform: 'uppercase', 
+              fontSize: '14px',
+              boxShadow: isHoveringSubmit && !isLoading ? '0 6px 30px rgba(248, 168, 38, 0.55)' : 'none',
+              transform: isHoveringSubmit && !isLoading ? 'translateY(-1px)' : 'none',
+              transition: 'all 0.2s ease'
+            }}
           >
             {isLoading ? 'Authenticating...' : 'Sign In'}
           </button>

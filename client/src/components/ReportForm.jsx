@@ -79,7 +79,7 @@ const inputStyle = {
   backgroundColor: '#2C2C2E',
   color: '#FFFFFF',
   border: '1px solid #48484A',
-  borderRadius: '8px',
+  borderRadius: '0px',
   padding: '12px',
   width: '100%',
   fontFamily: '"Public Sans", sans-serif',
@@ -92,8 +92,8 @@ const getCategoryInputStyle = (isFocused, isHovered) => ({
   backgroundColor: '#252528',
   border: 'none',
   borderBottom: isFocused || isHovered ? '2px solid #f8a826' : '2px solid transparent',
-  borderBottomLeftRadius: isFocused || isHovered ? '0' : '8px',
-  borderBottomRightRadius: isFocused || isHovered ? '0' : '8px',
+  borderBottomLeftRadius: '0px',
+  borderBottomRightRadius: '0px',
   outline: 'none',
   WebkitAppearance: 'none',
   accentColor: '#f8a826',
@@ -113,7 +113,7 @@ const getSeverityButtonStyle = (isActive, isHovered) => ({
   letterSpacing: '1px',
   textTransform: 'uppercase',
   border: isActive ? '2px solid #F5A623' : '2px solid transparent',
-  borderRadius: '6px',
+  borderRadius: '0px',
   cursor: 'pointer',
   backgroundColor: isActive ? '#2C2C2E' : isHovered ? '#252528' : '#131315',
   color: isActive ? '#FFFFFF' : '#888888',
@@ -133,7 +133,7 @@ const getSubmitButtonStyle = (isHovering, isDisabled) => ({
   padding: '16px',
   width: '100%',
   border: 'none',
-  borderRadius: '8px',
+  borderRadius: '0px',
   cursor: isDisabled ? 'not-allowed' : 'pointer',
   marginTop: '24px',
   boxSizing: 'border-box',
@@ -174,7 +174,8 @@ const ReportForm = ({ location, onClose }) => {
 
   useEffect(() => {
     if (!location) return;
-    const fetchAddress = async () => {
+    
+    const timeoutId = setTimeout(async () => {
       try {
         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lng}`, {
           headers: {
@@ -192,8 +193,9 @@ const ReportForm = ({ location, onClose }) => {
         console.error('Reverse geocode failed', err);
         setLocationLabel('');
       }
-    };
-    fetchAddress();
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
   }, [location]);
 
   const handleSubmit = async (e) => {
@@ -226,7 +228,7 @@ const ReportForm = ({ location, onClose }) => {
         <div>
           <h2 style={titleStyle}>Log Hazard</h2>
           <div style={subtitleStyle}>
-            {locationLabel || `Lat: ${location.lat.toFixed(4)} | Lng: ${location.lng.toFixed(4)}`}
+            {locationLabel || `${location.lat.toFixed(4)}°S, ${location.lng.toFixed(4)}°E`}
           </div>
         </div>
         <button

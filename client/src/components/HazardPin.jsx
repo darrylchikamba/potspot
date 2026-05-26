@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { formatDistanceToNow } from 'date-fns';
@@ -66,6 +66,7 @@ const HazardPin = ({ report }) => {
   const [lng, lat] = location.coordinates;
   const { colour, label } = getCategoryDetails(category);
   const timeSince = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  const [isUpvoteHovered, setIsUpvoteHovered] = useState(false);
 
   const customIcon = createCustomIcon(colour);
 
@@ -105,6 +106,7 @@ const HazardPin = ({ report }) => {
     alignItems: 'center',
     marginBottom: '8px',
     paddingBottom: '8px',
+    paddingRight: '24px',
     borderBottom: '1px solid #252528'
   };
 
@@ -174,24 +176,42 @@ const HazardPin = ({ report }) => {
     <Marker position={[lat, lng]} icon={customIcon}>
       <Popup className="tactical-popup">
         <div style={popupContainerStyle}>
-          <div style={popupHeaderStyle}>
-            <span style={labelStyle}>
-              {label}
-            </span>
-            <span style={getSeverityStyle(severity)}>
-              {severity}
-            </span>
-          </div>
+          <div 
+            style={{ cursor: 'pointer' }} 
+            onClick={() => window.location.href = `/report/${report._id}`}
+          >
+            <div style={popupHeaderStyle}>
+              <span style={labelStyle}>
+                {label}
+              </span>
+              <span style={getSeverityStyle(severity)}>
+                {severity}
+              </span>
+            </div>
 
-          <div style={addressStyle}>
-            {address || 'Coordinates Only'}
+            <div style={addressStyle}>
+              {address || 'Coordinates Only'}
+            </div>
           </div>
 
           <div style={footerStyle}>
             <div style={timeStyle}>
               {timeSince}
             </div>
-            <div style={upvoteStyle}>
+            <div 
+              style={{ ...upvoteStyle, cursor: 'pointer', textDecoration: isUpvoteHovered ? 'underline' : 'none' }}
+              onMouseEnter={() => setIsUpvoteHovered(true)}
+              onMouseLeave={() => setIsUpvoteHovered(false)}
+              onClick={() => {
+                fetch(`/api/reports/${report._id}/upvote`, { 
+                  method: 'PUT', 
+                  headers: { 
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'), 
+                    'Content-Type': 'application/json' 
+                  } 
+                }).then(() => window.dispatchEvent(new CustomEvent('upvote_from_popup', { detail: { reportId: report._id } })))
+              }}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd" transform="rotate(180 10 10)" />
               </svg>

@@ -10,11 +10,17 @@ const BottomNav = () => {
 
   const [hoveredNav, setHoveredNav] = useState(null);
   const [isReportHovered, setIsReportHovered] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [hoveredCancel, setHoveredCancel] = useState(false);
+  const [hoveredLogOutBtn, setHoveredLogOutBtn] = useState(false);
 
-  const handleLogout = () => {
-    if (window.confirm('Are you sure you want to log out?')) {
-      logout();
-    }
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   const handleReport = () => {
@@ -60,7 +66,8 @@ const BottomNav = () => {
   });
 
   return (
-    <div style={{
+    <>
+      <div style={{
       position: 'fixed',
       bottom: 0,
       left: 0,
@@ -108,14 +115,75 @@ const BottomNav = () => {
 
       <button 
         style={navItemStyle(false, 'logout')} 
-        onClick={handleLogout}
+        onClick={handleLogoutClick}
         onMouseEnter={() => setHoveredNav('logout')}
         onMouseLeave={() => setHoveredNav(null)}
       >
         <LogOut size={24} />
         <span style={labelStyle}>Log Out</span>
       </button>
+
+      {showLogoutModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 3000
+        }}>
+          <div style={{
+            backgroundColor: '#1f1f22',
+            borderLeft: '3px solid #f8a826',
+            padding: '32px',
+            borderRadius: '0px',
+            width: '100%',
+            maxWidth: '320px',
+            boxSizing: 'border-box'
+          }}>
+            <h3 style={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: '20px', margin: '0 0 8px 0', fontFamily: '"Space Grotesk", sans-serif' }}>Log Out</h3>
+            <p style={{ color: '#888888', fontSize: '14px', margin: '0 0 24px 0', fontFamily: '"Public Sans", sans-serif' }}>Are you sure you want to log out?</p>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+              <button 
+                onClick={() => setShowLogoutModal(false)}
+                onMouseEnter={() => setHoveredCancel(true)}
+                onMouseLeave={() => setHoveredCancel(false)}
+                style={{ backgroundColor: hoveredCancel ? '#3a3a3c' : '#252528', color: '#e2e2e2', border: 'none', padding: '10px 16px', borderRadius: '0px', cursor: 'pointer', fontFamily: '"Space Grotesk", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px', transition: 'background-color 0.2s ease' }}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleConfirmLogout}
+                onMouseEnter={() => setHoveredLogOutBtn(true)}
+                onMouseLeave={() => setHoveredLogOutBtn(false)}
+                style={{ 
+                  backgroundColor: '#f8a826', 
+                  color: '#000000', 
+                  border: 'none', 
+                  padding: '10px 16px', 
+                  borderRadius: '0px', 
+                  cursor: 'pointer', 
+                  fontFamily: '"Space Grotesk", sans-serif', 
+                  fontWeight: 'bold', 
+                  textTransform: 'uppercase', 
+                  fontSize: '12px',
+                  boxShadow: hoveredLogOutBtn ? '0 6px 30px rgba(248, 168, 38, 0.55)' : 'none',
+                  transform: hoveredLogOutBtn ? 'translateY(-1px)' : 'none',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+    </>
   );
 };
 

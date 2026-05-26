@@ -98,6 +98,11 @@
   }
 }
 
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #131315; }
+::-webkit-scrollbar-thumb { background: #f8a826; border-radius: 0px; }
+::-webkit-scrollbar-thumb:hover { background: #df9305; }
+
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: 'Geist Variable', sans-serif;

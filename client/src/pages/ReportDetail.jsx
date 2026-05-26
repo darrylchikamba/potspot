@@ -7,7 +7,7 @@ import { formatDistanceToNow } from 'date-fns';
 const pageStyle = {
   minHeight: '100%',
   backgroundColor: '#0e0e10',
-  padding: '40px 20px',
+  padding: '76px 20px 40px 20px',
   fontFamily: '"Public Sans", sans-serif',
   boxSizing: 'border-box'
 };
@@ -222,7 +222,7 @@ const ReportDetail = () => {
       <div style={pageStyle}>
         <div style={containerStyle}>
           <div style={topNavStyle}>
-            <Link to="/" style={backLinkStyle}>← Back to Map</Link>
+            <Link to="/my-reports" style={backLinkStyle}>← Back to My Reports</Link>
           </div>
           <div style={{ ...cardStyle, color: '#d53d18' }}>{error || 'Report unavailable.'}</div>
         </div>
@@ -243,7 +243,7 @@ const ReportDetail = () => {
       <div style={containerStyle}>
         
         <div style={topNavStyle}>
-          <Link to="/" style={backLinkStyle}>← Back to Map</Link>
+          <Link to="/my-reports" style={backLinkStyle}>← Back to My Reports</Link>
         </div>
 
         <div style={{ ...cardStyle, borderTop: `6px solid ${getCategoryColour(report.category)}` }}>

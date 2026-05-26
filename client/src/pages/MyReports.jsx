@@ -125,7 +125,8 @@ const buttonBaseStyle = {
   border: 'none',
   cursor: 'pointer',
   transition: 'all 0.2s ease',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+  borderRadius: '0px'
 };
 
 const getResolveButtonStyle = (isHovered) => ({
@@ -167,6 +168,10 @@ const MyReports = () => {
   const [loading, setLoading] = useState(true);
   const [hoveredDelete, setHoveredDelete] = useState(null);
   const [hoveredResolve, setHoveredResolve] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [reportToDelete, setReportToDelete] = useState(null);
+  const [hoveredModalCancel, setHoveredModalCancel] = useState(false);
+  const [hoveredModalDelete, setHoveredModalDelete] = useState(false);
 
   const fetchReports = useCallback(async () => {
     try {
@@ -197,10 +202,17 @@ const MyReports = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this report?')) return;
+  const handleDeleteClick = (id) => {
+    setReportToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!reportToDelete) return;
     try {
-      await axiosInstance.delete(`/api/reports/${id}`);
+      await axiosInstance.delete(`/api/reports/${reportToDelete}`);
+      setShowDeleteModal(false);
+      setReportToDelete(null);
       fetchReports();
     } catch (err) {
       console.error('Failed to delete report', err);
@@ -265,7 +277,7 @@ const MyReports = () => {
 
                 <div style={actionRowStyle}>
                   <button
-                    onClick={() => handleDelete(report._id)}
+                    onClick={() => handleDeleteClick(report._id)}
                     style={getDeleteButtonStyle(hoveredDelete === report._id)}
                     onMouseEnter={() => setHoveredDelete(report._id)}
                     onMouseLeave={() => setHoveredDelete(null)}
@@ -288,6 +300,69 @@ const MyReports = () => {
           })
         )}
       </div>
+
+      {showDeleteModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 3000
+        }}>
+          <div style={{
+            backgroundColor: '#1f1f22',
+            borderLeft: '3px solid #f8a826',
+            padding: '32px',
+            borderRadius: '0px',
+            width: '100%',
+            maxWidth: '320px',
+            boxSizing: 'border-box'
+          }}>
+            <h3 style={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: '20px', margin: '0 0 8px 0', fontFamily: '"Space Grotesk", sans-serif' }}>Delete Report</h3>
+            <p style={{ color: '#888888', fontSize: '14px', margin: '0 0 24px 0', fontFamily: '"Public Sans", sans-serif' }}>This action cannot be undone.</p>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+              <button 
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setReportToDelete(null);
+                }}
+                onMouseEnter={() => setHoveredModalCancel(true)}
+                onMouseLeave={() => setHoveredModalCancel(false)}
+                style={{ backgroundColor: hoveredModalCancel ? '#3a3a3c' : '#252528', color: '#e2e2e2', border: 'none', padding: '10px 16px', borderRadius: '0px', cursor: 'pointer', fontFamily: '"Space Grotesk", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px', transition: 'background-color 0.2s ease' }}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleConfirmDelete}
+                onMouseEnter={() => setHoveredModalDelete(true)}
+                onMouseLeave={() => setHoveredModalDelete(false)}
+                style={{ 
+                  backgroundColor: '#d53d18', 
+                  color: '#000000', 
+                  border: 'none', 
+                  padding: '10px 16px', 
+                  borderRadius: '0px',
+                  cursor: 'pointer', 
+                  fontFamily: '"Space Grotesk", sans-serif', 
+                  fontWeight: 'bold', 
+                  textTransform: 'uppercase', 
+                  fontSize: '12px',
+                  boxShadow: hoveredModalDelete ? '0 6px 30px rgba(213, 61, 24, 0.4)' : 'none',
+                  transform: hoveredModalDelete ? 'translateY(-1px)' : 'none',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

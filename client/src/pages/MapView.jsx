@@ -99,11 +99,29 @@ const MapView = () => {
     };
   }, []);
 
-  // BottomNav Event Listener
+  // Event Listeners
   useEffect(() => {
     const handleOpenReport = () => setIsReporting(true);
+    const handlePopupUpvote = () => {
+      // Re-fetch to sync state across views
+      const fetchReports = async () => {
+        try {
+          const { data } = await axiosInstance.get('/api/reports');
+          setReports(data || []);
+        } catch (error) {
+          console.error("Failed to load map data.", error);
+        }
+      };
+      fetchReports();
+    };
+
     window.addEventListener('openReportForm', handleOpenReport);
-    return () => window.removeEventListener('openReportForm', handleOpenReport);
+    window.addEventListener('upvote_from_popup', handlePopupUpvote);
+
+    return () => {
+      window.removeEventListener('openReportForm', handleOpenReport);
+      window.removeEventListener('upvote_from_popup', handlePopupUpvote);
+    };
   }, []);
 
   const categories = ['all', 'pothole', 'flooding', 'accident', 'road_closure', 'other'];
