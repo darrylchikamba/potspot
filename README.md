@@ -2,7 +2,7 @@
 
 A real-time community road hazard reporting map for South Africa. Report potholes, flooding, accidents, and road closures — instantly visible to everyone in your area.
 
-**Live Demo:** [potspot-yrhi.vercel.app](https://potspot-yrhi.vercel.app)
+**Live Demo:** [potspot.vercel.app](https://potspot.vercel.app)
 
 ---
 
