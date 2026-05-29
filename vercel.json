@@ -1,5 +1,11 @@
 {
     "buildCommand": "cd client && npm install && chmod +x node_modules/.bin/vite && npm run build",
     "outputDirectory": "client/dist",
-    "installCommand": "echo 'skip root install'"
+    "installCommand": "echo 'skip root install'",
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
 }

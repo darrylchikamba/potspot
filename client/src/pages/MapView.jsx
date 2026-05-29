@@ -162,7 +162,7 @@ const MapView = () => {
       </div>
 
       {/* Filter Overlay */}
-      <div style={{ position: 'fixed', top: '70px', left: '50%', transform: 'translateX(-50%)', zIndex: 2000, display: 'flex', gap: '8px' }}>
+      <div style={{ position: 'fixed', top: '70px', left: '50%', transform: 'translateX(-50%)', zIndex: 2000, display: 'flex', gap: '8px', overflowX: 'auto', flexWrap: 'nowrap' }}>
         {categories.map((cat) => (
           <button
             key={cat}
@@ -182,7 +182,8 @@ const MapView = () => {
               boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
               borderRadius: '2px',
               backdropFilter: filter === cat ? 'none' : 'blur(4px)',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
+              whiteSpace: 'nowrap'
             }}
           >
             {cat.replace('_', ' ')}
