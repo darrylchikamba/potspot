@@ -162,7 +162,7 @@ const MapView = () => {
       </div>
 
       {/* Filter Overlay */}
-      <div style={{ position: 'fixed', top: '70px', left: '50%', transform: 'translateX(-50%)', zIndex: 2000, display: 'flex', gap: '8px', overflowX: 'auto', flexWrap: 'nowrap' }}>
+      <div style={{ position: 'fixed', top: '70px', left: '0', right: '0', zIndex: 2000, display: 'flex', gap: '8px', overflowX: 'auto', flexWrap: 'nowrap', padding: '0 12px', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {categories.map((cat) => (
           <button
             key={cat}
